@@ -1,3 +1,818 @@
-<p>Hello everyone</p>
-<p>i am Qiran Li，this is my persenal website。 </p>
-<p>welcome to here!!!</p>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <meta charset="UTF-8" />
+  <title>Qiran Li - Academic Homepage</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card-bg: #ffffff;
+      --primary: #1f4f9c;
+      --secondary: #4b6cb7;
+      --text: #1b1b1f;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --accent: #f97316;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      background: radial-gradient(circle at top left, #e0ebff 0, #f5f7fb 45%, #ffffff 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .page {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 32px 16px 64px;
+    }
+
+    header {
+      display: grid;
+      grid-template-columns: minmax(0, 2.2fr) minmax(0, 1.3fr);
+      gap: 24px;
+      align-items: center;
+      margin-bottom: 32px;
+    }
+
+    @media (max-width: 768px) {
+      header {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .hero-card {
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 20px;
+      padding: 24px 24px 20px;
+      box-shadow:
+        0 18px 45px rgba(15, 23, 42, 0.06),
+        0 0 0 1px rgba(148, 163, 184, 0.15);
+      backdrop-filter: blur(10px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.18), transparent 60%);
+      pointer-events: none;
+    }
+
+    .hero-main {
+      position: relative;
+      z-index: 1;
+    }
+
+    .name {
+      font-size: 32px;
+      font-weight: 750;
+      letter-spacing: 0.02em;
+      color: #0f172a;
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+
+    .name span.cn {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .title {
+      font-size: 16px;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .affiliation {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .location {
+      font-size: 13px;
+      color: #9ca3af;
+      margin-bottom: 16px;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .tag {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 4px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      color: #4b5563;
+      background: rgba(248, 250, 252, 0.8);
+    }
+
+    .hero-intro {
+      font-size: 14px;
+      color: #4b5563;
+      margin-bottom: 16px;
+    }
+
+    .contact-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 13px;
+    }
+
+    .contact-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: #eff2ff;
+      color: #1e3a8a;
+      border: 1px solid rgba(129, 140, 248, 0.4);
+    }
+
+    .contact-label {
+      font-weight: 600;
+    }
+
+    .avatar-card {
+      justify-self: center;
+    }
+
+    .avatar {
+      width: 150px;
+      height: 150px;
+      border-radius: 28px;
+      background: linear-gradient(135deg, #1f4f9c, #4b6cb7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 40px;
+      font-weight: 700;
+      box-shadow:
+        0 20px 40px rgba(15, 23, 42, 0.25),
+        0 0 0 5px rgba(255, 255, 255, 0.9);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .avatar-initials {
+      position: relative;
+      z-index: 1;
+    }
+
+    .avatar::before {
+      content: "";
+      position: absolute;
+      width: 220%;
+      height: 220%;
+      background:
+        radial-gradient(circle at top, rgba(255, 255, 255, 0.40), transparent 55%),
+        radial-gradient(circle at bottom, rgba(15, 23, 42, 0.45), transparent 55%);
+      mix-blend-mode: soft-light;
+    }
+
+    .avatar-badge {
+      position: absolute;
+      bottom: 10px;
+      right: 14px;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.88);
+      color: #e5e7eb;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .section-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 2.4fr) minmax(0, 1.2fr);
+      gap: 24px;
+    }
+
+    .left-column {
+      /* When the right sidebar is removed, let the left column fill the grid */
+      grid-column: 1 / -1;
+    }
+
+    @media (max-width: 960px) {
+      .section-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    section {
+      margin-bottom: 24px;
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 18px 18px 14px;
+      border: 1px solid rgba(226, 232, 240, 0.8);
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.03);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      gap: 12px;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #111827;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .section-subtitle {
+      font-size: 12px;
+      color: #9ca3af;
+    }
+
+    .section-body {
+      font-size: 14px;
+      color: #4b5563;
+    }
+
+    /* Make About paragraphs look clean on multi-line wraps */
+    #about .section-body p {
+      text-align: justify;
+      text-justify: inter-word;
+    }
+
+    .about-divider {
+      width: 100%;
+      border-top: 1px dashed #d1d5db;
+      margin: 10px 0;
+    }
+
+    .list {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+    }
+
+    .list-item {
+      padding: 8px 0;
+      border-bottom: 1px dashed rgba(209, 213, 219, 0.7);
+    }
+
+    .list-item:last-child {
+      border-bottom: none;
+    }
+
+    .pub-title {
+      font-weight: 600;
+      color: #111827;
+    }
+
+    .pub-authors {
+      font-size: 13px;
+      color: #6b7280;
+      margin-top: 2px;
+    }
+
+    .pub-venue {
+      font-size: 12px;
+      color: #9ca3af;
+      margin-top: 2px;
+    }
+
+    .pub-tags {
+      margin-top: 4px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      font-size: 11px;
+    }
+
+    .pub-tag {
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(156, 163, 175, 0.7);
+      color: #4b5563;
+    }
+
+    .inline-link {
+      margin-left: 6px;
+      font-size: 11px;
+    }
+
+    .inline-link a {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.9);
+      background: #f3f4ff;
+      color: #1f2937;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+    }
+
+    .inline-link a:hover {
+      background: #e0e7ff;
+      border-color: rgba(99, 102, 241, 0.9);
+    }
+
+    .highlight-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(248, 113, 113, 0.06);
+      border: 1px solid rgba(248, 113, 113, 0.4);
+      color: #b91c1c;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1.1fr 1.2fr;
+      gap: 18px;
+    }
+
+    @media (max-width: 768px) {
+      .two-col {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .edu-item,
+    .experience-item {
+      margin-bottom: 8px;
+    }
+
+    .edu-degree {
+      font-weight: 600;
+      color: #111827;
+    }
+
+    .edu-meta {
+      font-size: 13px;
+      color: #6b7280;
+    }
+
+    .small-muted {
+      font-size: 12px;
+      color: #9ca3af;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .chip {
+      font-size: 11px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: #f9fafb;
+      color: #4b5563;
+    }
+
+    footer {
+      margin-top: 30px;
+      font-size: 12px;
+      text-align: center;
+      color: #9ca3af;
+    }
+
+    footer a {
+      color: #6b7280;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Header: avatar and basic info -->
+    <header>
+      <div class="hero-card">
+        <div class="hero-main">
+          <div class="name">
+            Qiran Li
+          </div>
+          <div class="title">
+            <!-- Write your current role here, e.g. -->
+            M.E. Student
+          </div>
+          <div class="affiliation">
+            School of Electronic Information and Electrical Engineering , Yangtze University, Jingzhou, China
+          </div>
+
+          <div class="tags">
+            <span class="tag">Deep Learning</span>
+            <span class="tag">Autonomous Driving</span>
+            <span class="tag">Vehicle Trajectory Prediction</span>
+            <span class="tag">Car-following Behavior</span>
+            <span class="tag">Large Language Models</span>
+          </div>
+
+          <p class="hero-intro">
+            I am currently focused on Deep Learning and Autonomous Driving, specifically Trajectory Prediction and Car-following behavior. My current research explores integrating Large Language Models (LLMs) and Graph Neural Networks (GNNs) for semantic-aware driving and advanced motion forecasting.
+          </p>
+
+          <div class="contact-row">
+            <span class="contact-item">
+              <span class="contact-label"><i class="fa-regular fa-envelope"></i> Email</span>
+              <a href="mailto:lqr_licoding@163.com">lqr_licoding@163.com</a>
+            </span>
+            <span class="contact-item">
+              <span class="contact-label"><i class="fa-brands fa-github"></i> GitHub</span>
+              <a href="https://github.com/qiranli0823" target="_blank">Qiranli0823</a>
+            </span>
+            <!-- You can add more links (Google Scholar / LinkedIn / personal CV) if you want -->
+            <!--
+            <span class="contact-item">
+              <span class="contact-label">Scholar</span>
+              <a href="https://scholar.google.com/..." target="_blank">Google Scholar</a>
+            </span>
+            <span class="contact-item">
+              <span class="contact-label">CV</span>
+              <a href="files/CV_Qiran_Li.pdf" target="_blank">Curriculum Vitae</a>
+            </span>
+            -->
+          </div>
+        </div>
+      </div>
+
+      <div class="avatar-card">
+        <div class="avatar">
+          <span class="avatar-initials">Q. Li</span>
+          <!-- <span class="avatar-badge">Research</span> -->
+        </div>
+      </div>
+    </header>
+
+    <div class="section-grid">
+      <!-- Left column -->
+      <div class="left-column">
+        <!-- About -->
+        <section id="education">
+          <div class="section-header">
+            <div>
+              <div class="section-title">Education </div>
+              <div class="section-subtitle">Education</div>
+            </div>
+          </div>
+          <div class="section-body">
+            <p>
+              <i class="fa-solid fa-graduation-cap"></i> M.E. in Electronic Information, Yangtze University, Jingzhou, China (2023 – Present), supervised by Jihui Tu.
+            </p>
+            <div class="about-divider"></div>
+            <p>
+              <i class="fa-solid fa-graduation-cap"></i> B.E. in Automation, Yangtze University, Jingzhou, China (2019 – 2023), supervised by Jihui Tu.
+            </p>
+          </div>
+        </section>
+
+        <!-- Publications -->
+        <section id="publications">
+          <div class="section-header">
+            <div>
+              <div class="section-title">Publications</div>
+              <div class="section-subtitle">Papers & Preprints</div>
+            </div>
+            <!-- If you have selected papers, you can mark them here -->
+            <!-- <div class="highlight-pill">Selected</div> -->
+          </div>
+          <div class="section-body">
+            <ul class="list">
+              <li class="list-item">
+                <div class="pub-title">
+                  1. <strong>Q. Li</strong>, Q. Chen, R. Xiang, X. Liu, J. Si, J. Tu*. Semantic-Aware Trajectory Prediction in IoV via Multi-view Contrastive Learning and Large Language Model. (Under review, IEEE Internet of Things Journal, JCR Q1, IF:8.9)
+                </div>
+              </li>
+              <li class="list-item">
+                <div class="pub-title">
+                  2. C. Jian, <strong>Q. Li</strong>, Q. Chen, J. Tu*, X. Ren. IoT-Enabled Eco-Driving Optimization for Connected and Automated Vehicles in Roundabouts Using KAN-Enhanced Deep Reinforcement Learning[J]. IEEE Internet of Things Journal, 2026. (JCR Q1, IF:8.9)
+                </div>
+              </li>
+              <li class="list-item">
+                <div class="pub-title">
+                  3. <strong>Q. Li</strong>, S. Wang, Z. Cheng, Q. Zhang, J. Li, J. Tu*. MSRCTNet: a novel multi-scale capsule triplet network for efficient redundant frame removal in wireless capsule endoscopy videos[J]. Scientific Reports, 2026. (JCR Q1, IF:3.9)
+                </div>
+              </li>
+              <li class="list-item">
+                <div class="pub-title">
+                  4. <strong>Q. Li</strong>, Q. Chen, S. Wang, S. Wang, Q. Wang, J. Tu*, A. Jafaripournimchahi. A novel spatio-temporal attention mechanism model for car-following in autonomous driving[J]. Computers and Electrical Engineering, 2025, 122: 109901. (JCR Q1, IF:4.9)
+                  <!-- <span class="inline-link">
+                    <a href="https://doi.org/10.1016/j.compeleceng.2024.109901" target="_blank" rel="noopener noreferrer">doi</a>
+                  </span> -->
+                </div>
+              </li>
+              <li class="list-item">
+                <div class="pub-title">
+                  5. <strong>Q. Li</strong>, Q. Chen, C. Jian, J. Tu*. A Knowledge-Enhanced Trajectory Prediction Framework via Large Language Models and Vectorized Feature Exchange[C]. 2025 2nd International Symposium on AI and Cybersecurity (ISAICS). IEEE, 2025. (EI Conference)
+                </div>
+              </li>
+              <li class="list-item">
+                <div class="pub-title">
+                  6. <strong>Q. Li</strong>, Q. Chen, C. Jian, Q. Wang, J. Tu*. GCN-SATO: A Graph Convolutional Network with Self-Attention based Car-Following Model[C]. Journal of Physics: Conference Series, 2024. (EI Conference, Best Paper Award)
+                </div>
+              </li>
+              <li class="list-item">
+                <div class="pub-title">
+                  7. C. Liang, Q. Chen, <strong>Q. Li</strong>, Q. Wang, K. Zhao, J. Tu*, A. Jafaripournimchahi. HADNet: A novel lightweight approach for abnormal sound detection on highway based on 1D convolutional neural network and Multi-Head Self-Attention mechanism[J]. Electronics, 2024. (JCR Q2, IF:2.6)
+                </div>
+              </li>
+              <li class="list-item">
+                <div class="pub-title">
+                  8. Fu B, Li S, Wei J, <strong>Q. Li</strong>, Q Wang, J Tu*, A novel intelligent garbage classification system based on deep learning and an embedded linux system[J]. IEEE access, 2021. (JCR Q2, IF:3.6)
+                </div>
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- Patents -->
+        <section id="patents">
+          <div class="section-header">
+            <div>
+              <div class="section-title">Patents</div>
+              <div class="section-subtitle">Patents</div>
+            </div>
+          </div>
+          <div class="section-body">
+            <ul class="list">
+              <!-- Example patent entry -->
+              <li class="list-item">
+                <div class="pub-title">
+                  1. An ecological driving method, system, device, and medium in a roundabout scenario
+                </div>
+                <div class="pub-authors">
+                  Inventors: Jihui Tu, <strong>Qiran Li</strong>, Chengli Jian, Cheng Li
+                </div>
+                <div class="pub-venue">
+                  Patent No.LU601436B1 · Grant Year: 2025 · Invention Patent in Luxembourg
+                </div>
+              </li>
+              <li class="list-item">
+                <div class="pub-title">
+                  2. Intelligent Waste Sorting System
+                </div>
+                <div class="pub-authors">
+                  Inventors: 	<strong>Qiran Li</strong>
+                </div>
+                <div class="pub-venue">
+                  Patent No.2023SR1548976 · Grant Year: 2023 · Software Copyright in China
+                </div>
+              </li>
+              <li class="list-item">
+                <div class="pub-title">
+                  3. A collision-avoidance device for unmanned aerial vehicles
+                </div>
+                <div class="pub-authors">
+                  Inventors: <strong>Qiran Li</strong>, Qianchun Li, Kun Jiang, Jintao He
+                </div>
+                <div class="pub-venue">
+                  Patent No.CN202222960554.9 · Grant Year: 2022 · Utility Model Patent in China
+                </div>
+              </li>
+              <li class="list-item">
+                <div class="pub-title">
+                  4. An unmanned vehicle chassis for greenhouse monitoring
+                </div>
+                <div class="pub-authors">
+                  Inventors: 	Yunlong Wang, <strong>Qiran Li</strong>, Chengli Jian, Shihao Wang, Hui Zhao
+                </div>
+                <div class="pub-venue">
+                  Patent No.CN202222943258.8 · Grant Year: 2022 · Utility Model Patent in China
+                </div>
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- Competitions -->
+        <section id="competitions">
+          <div class="section-header">
+            <div>
+              <div class="section-title">Competitions</div>
+              <div class="section-subtitle">Competitions</div>
+            </div>
+          </div>
+          <div class="section-body">
+            <ul class="list">
+              <li class="list-item">
+                <div class="pub-title">
+                  1. China Graduate Smart Construction Innovation Competition (Category B)
+                </div>
+                <div class="pub-venue">
+                  <i class="fa-solid fa-medal" style="color: #FFD700;"></i> National 1st Prize (3/5), Oct. 2025
+                </div>
+                <div class="pub-overview" style="font-size: 0.9em; color: #555; margin-top: 5px;">
+                  <strong>Overview:</strong> Responsible for designing the interactive user interface with Qt, and creating the competition poster.
+                </div>
+              </li>
+              <li class="list-item">
+                <div class="pub-title">
+                  2.  “Shenwu Cup” 6th China Graduate Robotics Innovation Design Competition (Category B)
+                </div>
+                <div class="pub-venue">
+                  <i class="fa-solid fa-medal" style="color: #C0C0C0;"></i> National Third Prize (2/5), Oct. 2024
+                </div>
+                <div class="pub-overview" style="font-size: 0.9em; color: #555; margin-top: 5px;">
+                  <strong>Overview:</strong> Responsible for designing the interactive user interface with Qt, deploying the system to an NVIDIA Jetson Nano, and creating the competition poster.
+                </div>
+              </li>
+              <li class="list-item">
+                <div class="pub-title">
+                  3. Undergraduate Innovation & Entrepreneurship Project: Design and Implementation of Smart Trash Bin
+                </div>
+                <div class="pub-venue">
+                  <i class="fa-solid fa-medal" style="color: #FFD700;"></i> National Level (2/5), May 2022
+                </div>
+                <div class="pub-overview" style="font-size: 0.9em; color: #555; margin-top: 5px;">
+                  <strong>Overview:</strong> Responsible for training and testing garbage classification models using the YOLO algorithm, deploying the model to a Raspberry Pi, developing the user interface with Qt, establishing communication between the Raspberry Pi and STM32, and controlling servos via STM32 for automated sorting.
+                </div>
+              </li>
+              <li class="list-item">
+                <div class="pub-title">
+                  4. National College Engineering Training Competition-Intelligent Logistics Vehicle (Category A)
+                </div>
+                <div class="pub-venue">
+                  <i class="fa-solid fa-medal" style="color: #CD7F32;"></i> Provincial 2nd Prize (1/3), Apr. 2021
+                </div>
+                <div class="pub-overview" style="font-size: 0.9em; color: #555; margin-top: 5px;">
+                  <strong>Overview:</strong> Designed motor drive systems and PID control algorithms for Mecanum wheel kinematics; implemented line-following and precise positioning systems; established serial communication between OpenMV and Arduino for vision-based navigation.
+                </div>
+              </li>
+              <!-- Add more competitions, scholarships, honors, etc. -->
+            </ul>
+          </div>
+        </section>
+
+        <section id="Awards">
+          <div class="section-header">
+            <div>
+              <div class="section-title">Awards</div>
+              <div class="section-subtitle">Awards</div>
+            </div>
+          </div>
+          <div class="section-body">
+            <ul class="list">
+              <li class="list-item">
+                <div class="pub-title">
+                  1. National Scholarship for Master Students <i class="fas fa-award" style="color: #d4af37;"></i>
+                </div>
+                <div class="pub-venue">
+                  Ministry of Education, China · Dec. 2025
+                </div>
+                <div class="pub-title">
+                  2. Graduate Academic Scholarship, First Class  (University-level Honor)
+                </div>
+                <div class="pub-venue">
+                  Yangtze University, Oct. 2025
+                </div>
+                <div class="pub-title">
+                  3. Graduate Academic Scholarship, First Class  (University-level Honor)
+                </div>
+                <div class="pub-venue">
+                  Yangtze University, Oct. 2024
+                </div>
+                <div class="pub-title">
+                  4. Graduate Academic Scholarship, Second Class  (University-level Honor)
+                </div>
+                <div class="pub-venue">
+                  Yangtze University, Oct. 2023
+                </div>
+                <div class="pub-title">
+                  5. University-level Outstanding Undergraduate Graduate Award  (University-level Honor)
+                </div>
+                <div class="pub-venue">
+                  Yangtze University, Jun. 2023
+                </div>
+                <div class="pub-title">
+                  6. Yuzhi Scholarship (University-level Honor)
+                </div>
+                <div class="pub-venue">
+                  Yangtze University, Dec. 2021
+                </div>
+              <!-- Add more competitions, scholarships, honors, etc. -->
+            </ul>
+          </div>
+        </section>
+        
+        <!-- Experience -->
+        <!-- <section id="experience">
+          <div class="section-header">
+            <div>
+              <div class="section-title">Experience</div>
+              <div class="section-subtitle">Research & Internships</div>
+            </div>
+          </div>
+          <div class="section-body">
+            <div class="experience-item">
+              <div class="edu-degree">
+                Research Assistant, Lab of XXX
+              </div>
+              <div class="edu-meta">
+                Advisor: Prof. XXX · 202X – Present
+              </div>
+              <div class="small-muted">
+                Research focus / project summary (1–2 sentences).
+              </div>
+            </div>
+            <div class="experience-item">
+              <div class="edu-degree">
+                Internship, Company / Institute
+              </div>
+              <div class="edu-meta">
+                202X Summer
+              </div>
+              <div class="small-muted">
+                Briefly describe what you worked on during the internship.
+              </div>
+            </div>
+          </div>
+        </section> -->
+
+        <!-- Skills / Interests -->
+        <section id="skills">
+          <div class="section-header">
+            <div>
+              <div class="section-title">Skills & Interests</div>
+              <div class="section-subtitle">Technical Skills & Interests</div>
+            </div>
+          </div>
+          <div class="section-body">
+            <div class="chip-row" style="margin-bottom: 6px;">
+              <span class="chip">Python</span>
+              <span class="chip">PyTorch</span>
+              <span class="chip">C</span>
+              <span class="chip">Linux</span>
+            </div>
+            <div class="chip-row" style="margin-bottom: 6px;">
+              <span class="chip">Machine Learning</span>
+              <span class="chip">Machine Learning</span>
+              <span class="chip">Autonomous Driving</span>
+              <span class="chip">Large Language Models</span>
+            </div>
+            <div class="chip-row" style="margin-bottom: 6px;">
+              <span class="chip">Latex</span>
+              <span class="chip">Overleaf</span>
+            </div>
+            <div class="chip-row">
+              <span class="chip">Jetson nano</span>
+              <span class="chip">Raspberry Pi</span>
+              <span class="chip">OpenMV</span>
+              <span class="chip">Arduino</span>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <footer>
+      © <span id="year"></span> Qiran Li. All rights reserved.
+      &nbsp;|&nbsp;
+      Built with <a href="https://pages.github.com/" target="_blank">GitHub Pages</a>.
+    </footer>
+  </div>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
