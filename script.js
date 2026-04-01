@@ -1,3 +1,24 @@
+// 防抖函数 - 用于优化 scroll 事件性能
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(this, args), wait);
+  };
+}
+
+// 节流函数 - 用于优化 mousemove 事件性能
+function throttle(func, limit) {
+  let inThrottle;
+  return function executedFunction(...args) {
+    if (!inThrottle) {
+      func.apply(this, args);
+      inThrottle = true;
+      setTimeout(() => inThrottle = false, limit);
+    }
+  };
+}
+
 // 导航栏交互
 document.addEventListener('DOMContentLoaded', function() {
   const navItems = document.querySelectorAll('.nav-item');
@@ -11,6 +32,41 @@ document.addEventListener('DOMContentLoaded', function() {
   let isMouseInSection = false;
   let currentMouseSectionId = null;
 
+  // 公共函数：更新导航栏活动状态
+  function updateNavActiveState(targetId) {
+    if (!targetId) return;
+
+    navItems.forEach(item => {
+      item.classList.remove('active');
+      if (item.getAttribute('data-target') === targetId) {
+        item.classList.add('active');
+      }
+    });
+  }
+
+  // 公共函数：平滑滚动
+  function scrollToTarget(targetId) {
+    const targetElement = document.getElementById(targetId);
+    if (!targetElement) return;
+
+    let scrollTop;
+    if (targetId === 'top') {
+      scrollTop = 0;
+    } else {
+      const elementTop = targetElement.offsetTop;
+      const elementHeight = targetElement.offsetHeight;
+      const windowHeight = window.innerHeight;
+      scrollTop = elementTop + (elementHeight / 2) - (windowHeight / 2);
+      const maxScroll = document.documentElement.scrollHeight - windowHeight;
+      scrollTop = Math.max(0, Math.min(scrollTop, maxScroll));
+    }
+
+    window.scrollTo({
+      top: scrollTop,
+      behavior: 'smooth'
+    });
+  }
+
   // 平滑滚动 - 侧边导航栏
   navItems.forEach(item => {
     item.addEventListener('click', function(e) {
@@ -18,26 +74,8 @@ document.addEventListener('DOMContentLoaded', function() {
       const targetElement = document.getElementById(targetId);
       if (targetElement) {
         e.preventDefault();
-        let scrollTop;
-        if (targetId === 'top') {
-          scrollTop = 0;
-        } else {
-          const elementTop = targetElement.offsetTop;
-          const elementHeight = targetElement.offsetHeight;
-          const windowHeight = window.innerHeight;
-          scrollTop = elementTop + (elementHeight / 2) - (windowHeight / 2);
-          const maxScroll = document.documentElement.scrollHeight - windowHeight;
-          scrollTop = Math.max(0, Math.min(scrollTop, maxScroll));
-        }
-
-        window.scrollTo({
-          top: scrollTop,
-          behavior: 'smooth'
-        });
-
-        // 更新活动状态
-        navItems.forEach(nav => nav.classList.remove('active'));
-        this.classList.add('active');
+        scrollToTarget(targetId);
+        updateNavActiveState(targetId);
         isMouseInSection = false;
         currentMouseSectionId = targetId;
       }
@@ -45,27 +83,30 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // 平滑滚动 - 移动端菜单
-  if (mobileMenu) {
+  if (mobileMenu && hamburger) {
     mobileMenu.querySelectorAll('a').forEach(link => {
       link.addEventListener('click', function(e) {
         const targetId = this.getAttribute('data-target');
         const targetElement = document.getElementById(targetId);
         if (targetElement) {
           e.preventDefault();
+          // 移动端滚动
+          const scrollPosition = targetId === 'top' ? 0 : targetElement.offsetTop - 20;
           window.scrollTo({
-            top: targetId === 'top' ? 0 : targetElement.offsetTop - 20,
+            top: scrollPosition,
             behavior: 'smooth'
           });
           // 关闭移动端菜单
-          if (hamburger) hamburger.classList.remove('active');
+          hamburger.classList.remove('active');
           mobileMenu.classList.remove('active');
+          hamburger.setAttribute('aria-expanded', 'false');
         }
       });
     });
   }
 
-  // 滚动时更新活动状态
-  function updateActiveNav() {
+  // 滚动时更新活动状态（防抖优化）
+  const updateActiveNav = function() {
     if (isMouseInSection && currentMouseSectionId) return;
 
     let scrollCurrent = '';
@@ -94,25 +135,23 @@ document.addEventListener('DOMContentLoaded', function() {
       targetId = scrollCurrent;
     }
 
-    navItems.forEach(item => {
-      item.classList.remove('active');
-      if (item.getAttribute('data-target') === targetId) {
-        item.classList.add('active');
-      }
-    });
+    updateNavActiveState(targetId);
 
     if (window.scrollY < 100 && targetId !== 'top') {
-      navItems.forEach(item => item.classList.remove('active'));
-      document.querySelector('.nav-item[data-target="top"]').classList.add('active');
+      const topNavItem = document.querySelector('.nav-item[data-target="top"]');
+      if (topNavItem) {
+        topNavItem.classList.add('active');
+      }
       currentMouseSectionId = null;
     }
-  }
+  };
 
-  window.addEventListener('scroll', updateActiveNav);
+  window.addEventListener('scroll', debounce(updateActiveNav, 10));
   updateActiveNav();
 
-  // 鼠标移动时更新导航栏
+  // 鼠标移动时更新导航栏（仅桌面端）
   if (sideNav) {
+    // 获取鼠标所在位置的 section
     function getSectionAtMousePosition(mouseX, mouseY) {
       for (const section of sections) {
         const rect = section.getBoundingClientRect();
@@ -124,43 +163,42 @@ document.addEventListener('DOMContentLoaded', function() {
       return null;
     }
 
-    function highlightNavItem(targetId) {
-      navItems.forEach(item => {
-        item.classList.remove('active');
-        if (item.getAttribute('data-target') === targetId) {
-          item.classList.add('active');
-        }
-      });
+    // 更新侧边栏背景
+    function updateSideNavBackground(isMouseOnNav, mouseY) {
+      if (isMouseOnNav) {
+        sideNav.style.background = 'rgba(255, 255, 255, 0.95)';
+      } else {
+        const windowHeight = window.innerHeight;
+        const ratio = mouseY / windowHeight;
+        let opacity = 0.7 + (ratio * 0.25);
+        opacity = Math.max(0.7, Math.min(0.95, opacity));
+        sideNav.style.background = `rgba(255, 255, 255, ${opacity})`;
+      }
     }
 
-    document.addEventListener('mousemove', function(e) {
+    // 鼠标移动事件处理（节流优化）
+    const handleMouseMove = throttle(function(e) {
       const navRect = sideNav.getBoundingClientRect();
       const isMouseOnNav = e.clientX >= navRect.left &&
                           e.clientX <= navRect.right &&
                           e.clientY >= navRect.top &&
                           e.clientY <= navRect.bottom;
 
-      if (isMouseOnNav) {
-        sideNav.style.background = 'rgba(255, 255, 255, 0.95)';
-        isMouseInSection = false;
-      } else {
-        const mouseY = e.clientY;
-        const windowHeight = window.innerHeight;
-        const ratio = mouseY / windowHeight;
-        let opacity = 0.7 + (ratio * 0.25);
-        opacity = Math.max(0.7, Math.min(0.95, opacity));
-        sideNav.style.background = `rgba(255, 255, 255, ${opacity})`;
+      updateSideNavBackground(isMouseOnNav, e.clientY);
 
+      if (!isMouseOnNav) {
         const sectionId = getSectionAtMousePosition(e.clientX, e.clientY);
         if (sectionId) {
           isMouseInSection = true;
           currentMouseSectionId = sectionId;
-          highlightNavItem(sectionId);
+          updateNavActiveState(sectionId);
         } else {
           isMouseInSection = false;
         }
       }
-    });
+    }, 50);
+
+    document.addEventListener('mousemove', handleMouseMove);
 
     document.addEventListener('mouseleave', function() {
       sideNav.style.background = 'rgba(255, 255, 255, 0.85)';
@@ -176,65 +214,58 @@ document.addEventListener('DOMContentLoaded', function() {
                           e.clientY >= navRect.top &&
                           e.clientY <= navRect.bottom;
 
-      if (isMouseOnNav) {
-        sideNav.style.background = 'rgba(255, 255, 255, 0.95)';
-        isMouseInSection = false;
-      } else {
-        const mouseY = e.clientY;
-        const windowHeight = window.innerHeight;
-        const ratio = mouseY / windowHeight;
-        let opacity = 0.7 + (ratio * 0.25);
-        opacity = Math.max(0.7, Math.min(0.95, opacity));
-        sideNav.style.background = `rgba(255, 255, 255, ${opacity})`;
+      updateSideNavBackground(isMouseOnNav, e.clientY);
 
+      if (!isMouseOnNav) {
         const sectionId = getSectionAtMousePosition(e.clientX, e.clientY);
         if (sectionId) {
           isMouseInSection = true;
           currentMouseSectionId = sectionId;
-          highlightNavItem(sectionId);
-        } else {
-          isMouseInSection = false;
+          updateNavActiveState(sectionId);
         }
       }
     });
   }
 
-// 汉堡菜单
-if (hamburger && mobileMenu) {
-  hamburger.addEventListener('click', function() {
-    this.classList.toggle('active');
-    mobileMenu.classList.toggle('active');
-    // 更新aria-expanded状态
-    const isExpanded = mobileMenu.classList.contains('active');
-    hamburger.setAttribute('aria-expanded', isExpanded);
-  });
+  // 汉堡菜单
+  if (hamburger && mobileMenu) {
+    hamburger.addEventListener('click', function() {
+      const isExpanded = !mobileMenu.classList.contains('active');
+      hamburger.classList.toggle('active');
+      mobileMenu.classList.toggle('active');
+      hamburger.setAttribute('aria-expanded', String(isExpanded));
+    });
 
-  // 点击外部关闭菜单
-  document.addEventListener('click', function(e) {
-    if (!mobileMenu.contains(e.target) && !hamburger.contains(e.target)) {
-      mobileMenu.classList.remove('active');
-      hamburger.classList.remove('active');
-      hamburger.setAttribute('aria-expanded', false);
-    }
-  });
+    // 点击外部关闭菜单
+    document.addEventListener('click', function(e) {
+      if (mobileMenu.classList.contains('active') &&
+          !mobileMenu.contains(e.target) &&
+          !hamburger.contains(e.target)) {
+        mobileMenu.classList.remove('active');
+        hamburger.classList.remove('active');
+        hamburger.setAttribute('aria-expanded', 'false');
+      }
+    });
 
-  // ESC键关闭菜单
-  document.addEventListener('keydown', function(e) {
-    if (e.key === Escape && mobileMenu.classList.contains('active')) {
-      mobileMenu.classList.remove('active');
-      hamburger.classList.remove('active');
-      hamburger.setAttribute('aria-expanded', false);
-    }
-  });
-}
+    // ESC 键关闭菜单
+    document.addEventListener('keydown', function(e) {
+      if (e.key === "Escape" && mobileMenu.classList.contains('active')) {
+        mobileMenu.classList.remove('active');
+        hamburger.classList.remove('active');
+        hamburger.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+
+  // 返回顶部按钮
   if (backToTop) {
-    function showBackToTop() {
+    const showBackToTop = debounce(function() {
       if (window.scrollY > 300) {
         backToTop.classList.add('show');
       } else {
         backToTop.classList.remove('show');
       }
-    }
+    }, 10);
 
     backToTop.addEventListener('click', function() {
       window.scrollTo({
@@ -257,7 +288,7 @@ if (hamburger && mobileMenu) {
   animateElements.forEach((element, index) => {
     if (!prefersReducedMotion) {
       element.classList.add('animate-on-scroll');
-      // 为 section 添加错落延迟 (头部卡片除外)
+      // 为 section 添加错落延迟（头部卡片除外）
       if (!element.classList.contains('hero-card')) {
         element.setAttribute('data-delay', String(Math.min(index, 6)));
       }
@@ -284,7 +315,7 @@ if (hamburger && mobileMenu) {
         // 触发新动画
         entry.target.classList.add('visible');
 
-        // 为列表项添加动画 - 使用 requestAnimationFrame 优化性能
+        // 为列表项添加动画
         const listItems = entry.target.querySelectorAll('.list-item');
         if (listItems.length > 0) {
           requestAnimationFrame(() => {
@@ -293,7 +324,7 @@ if (hamburger && mobileMenu) {
                 // 使用 setTimeout 创建错落效果
                 setTimeout(() => {
                   item.classList.add('animate-item');
-                }, itemIndex * 50); // 50ms 间隔
+                }, itemIndex * 50);
               } else {
                 item.classList.add('animate-item');
               }
@@ -303,13 +334,8 @@ if (hamburger && mobileMenu) {
       }
     });
   }, {
-    threshold: 0.15,  // 增加阈值，确保元素更明显时触发
-    rootMargin: '0px 0px -100px 0px'  // 增加底部边距，提前触发
-  });
-
-  // 清理 IntersectionObserver - 页面卸载时
-  window.addEventListener('beforeunload', () => {
-    observer.disconnect();
+    threshold: 0.15,
+    rootMargin: '0px 0px -100px 0px'
   });
 
   animateElements.forEach(element => {
@@ -317,7 +343,10 @@ if (hamburger && mobileMenu) {
   });
 
   // 设置当前年份
-  document.getElementById("year").textContent = new Date().getFullYear();
+  const yearElement = document.getElementById("year");
+  if (yearElement) {
+    yearElement.textContent = new Date().getFullYear();
+  }
 });
 
 // 暗色模式检测
