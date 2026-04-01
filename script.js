@@ -349,7 +349,8 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-// 暗色模式检测
+// 暗色模式检测 - 已禁用
+/*
 if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
   document.documentElement.setAttribute('data-theme', 'dark');
 }
@@ -362,3 +363,4 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e =
     document.documentElement.removeAttribute('data-theme');
   }
 });
+*/

@@ -575,7 +575,7 @@ footer a {
   color: #6b7280;
 }
 
-/* 暗色模式 */
+/* 暗色模式 - 已禁用
 @media (prefers-color-scheme: dark) {
   :root {
     --bg: #0f172a;
@@ -615,6 +615,7 @@ footer a {
     background: var(--text);
   }
 }
+*/
 
 /* 加载动画 */
 @keyframes fadeIn {
