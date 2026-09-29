@@ -30,19 +30,18 @@ body::before {
   left: 0;
   width: 100%;
   height: 100%;
-  background:
+  background-image:
     linear-gradient(135deg,
       rgba(59, 130, 246, 0.05) 0%,
       rgba(147, 51, 234, 0.03) 25%,
       rgba(236, 72, 153, 0.02) 50%,
       rgba(239, 68, 68, 0.02) 75%,
-      rgba(34, 197, 94, 0.03) 100%);
-  background-image:
+      rgba(34, 197, 94, 0.03) 100%),
     radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
     radial-gradient(circle at 80% 70%, rgba(147, 51, 234, 0.06) 0%, transparent 50%),
     radial-gradient(circle at 40% 80%, rgba(236, 72, 153, 0.04) 0%, transparent 50%);
   background-attachment: fixed;
-  background-size: 100% 100%, 300px 300px, 400px 400px;
+  background-size: 100% 100%, 100% 100%, 300px 300px, 400px 400px;
   z-index: -1;
   clip-path: polygon(
     0% 0%,
@@ -53,14 +52,6 @@ body::before {
     0% 0%
   );
   overflow: hidden;
-}
-
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-  color: var(--text);
-  line-height: 1.6;
-  position: relative;
-  overflow-x: hidden;
 }
 
 a {
@@ -236,19 +227,6 @@ header {
   mix-blend-mode: soft-light;
 }
 
-.avatar-badge {
-  position: absolute;
-  bottom: 10px;
-  right: 14px;
-  padding: 3px 9px;
-  border-radius: 999px;
-  background: rgba(15, 23, 42, 0.88);
-  color: #e5e7eb;
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
 .section-grid {
   display: grid;
   grid-template-columns: minmax(0, 2.4fr) minmax(0, 1.2fr);
@@ -320,18 +298,11 @@ section {
 .list-item {
   padding: 8px 0;
   border-bottom: 1px dashed rgba(209, 213, 219, 0.7);
-  opacity: 0;
-  transform: translateX(-10px);
   transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
-.list-item.animate-item {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-/* 动画类名管理优化 */
-.list-item:not(.animate-item) {
+/* 默认隐藏态由 .js 类启用 —— JS 失败时所有内容仍可见 */
+.js .list-item:not(.animate-item) {
   opacity: 0;
   transform: translateX(-10px);
 }
@@ -374,90 +345,6 @@ section {
   font-size: 12px;
   color: #9ca3af;
   margin-top: 2px;
-}
-
-.pub-tags {
-  margin-top: 4px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  font-size: 11px;
-}
-
-.pub-tag {
-  padding: 2px 7px;
-  border-radius: 999px;
-  border: 1px solid rgba(156, 163, 175, 0.7);
-  color: #4b5563;
-}
-
-.inline-link {
-  margin-left: 6px;
-  font-size: 11px;
-}
-
-.inline-link a {
-  display: inline-block;
-  padding: 3px 10px;
-  border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.9);
-  background: #f3f4ff;
-  color: #1f2937;
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  text-decoration: none;
-}
-
-.inline-link a:hover {
-  background: #e0e7ff;
-  border-color: rgba(99, 102, 241, 0.9);
-}
-
-.highlight-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: rgba(248, 113, 113, 0.06);
-  border: 1px solid rgba(248, 113, 113, 0.4);
-  color: #b91c1c;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-}
-
-.two-col {
-  display: grid;
-  grid-template-columns: 1.1fr 1.2fr;
-  gap: 18px;
-}
-
-@media (max-width: 768px) {
-  .two-col {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-
-.edu-item,
-.experience-item {
-  margin-bottom: 8px;
-}
-
-.edu-degree {
-  font-weight: 600;
-  color: #111827;
-}
-
-.edu-meta {
-  font-size: 13px;
-  color: #6b7280;
-}
-
-.small-muted {
-  font-size: 12px;
-  color: #9ca3af;
 }
 
 .chip-row {
@@ -679,8 +566,8 @@ footer a {
   }
 }
 
-/* 初始隐藏状态 - 元素在动画前不可见 */
-.animate-on-scroll {
+/* 初始隐藏状态 - 仅在 JS 启用时生效；JS 失败时元素直接可见 */
+.js .animate-on-scroll {
   opacity: 0;
   transform: translateY(30px);
   transition: opacity 0.6s ease-out, transform 0.6s ease-out;
@@ -841,5 +728,48 @@ footer a {
 
   .hamburger.active span:nth-child(3) {
     transform: rotate(-45deg) translate(7px, -6px);
+  }
+}
+
+/* 打印样式 - 学术主页常被打印 */
+@media print {
+  body::before,
+  .side-nav,
+  .hamburger,
+  .mobile-menu,
+  .back-to-top,
+  .animate-on-scroll {
+    display: none !important;
+    background: none !important;
+  }
+
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  .hero-card,
+  section {
+    box-shadow: none !important;
+    border: 1px solid #ccc !important;
+    page-break-inside: avoid;
+    background: #fff !important;
+  }
+
+  .js .list-item,
+  .js .animate-on-scroll {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  a {
+    color: #000 !important;
+    text-decoration: underline;
+  }
+
+  a[href]::after {
+    content: " (" attr(href) ")";
+    font-size: 11px;
+    color: #555;
   }
 }

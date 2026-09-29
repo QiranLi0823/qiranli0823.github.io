@@ -1,22 +1,34 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="Qiran Li - Teaching Assistant at Yangtze University College of Arts and Sciences. Research focus: Deep Learning, Autonomous Driving, Vehicle Trajectory Prediction, Large Language Models." />
   <meta name="keywords" content="Qiran Li, 李启燃, Yangtze University, Deep Learning, Autonomous Driving, Trajectory Prediction" />
   <meta name="author" content="Qiran Li" />
+  <meta name="theme-color" content="#1f4f9c" />
+  <meta name="robots" content="index, follow" />
 
   <!-- Open Graph / Social Media -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Qiran Li - Academic Homepage" />
   <meta property="og:description" content="Teaching Assistant at Yangtze University College of Arts and Sciences. Research: Deep Learning, Autonomous Driving, Trajectory Prediction." />
   <meta property="og:url" content="https://qiranli0823.github.io" />
+  <meta property="og:image" content="https://qiranli0823.github.io/pic/og.png" />
+  <meta property="og:image:alt" content="Qiran Li - Academic Homepage" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Qiran Li - Academic Homepage" />
+  <meta name="twitter:description" content="Teaching Assistant at Yangtze University College of Arts and Sciences. Research: Deep Learning, Autonomous Driving, Trajectory Prediction." />
+  <meta name="twitter:image" content="https://qiranli0823.github.io/pic/og.png" />
 
   <title>Qiran Li  - Academic Homepage</title>
 
   <!-- Favicon -->
-  <link rel="icon" href="pic/001.jpg" type="image/x-icon" />
+  <link rel="icon" type="image/svg+xml" href="pic/favicon.svg" />
+  <link rel="icon" type="image/jpeg" href="pic/001.jpg" />
+  <link rel="apple-touch-icon" href="pic/001.jpg" />
 
   <!-- External Stylesheets -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -31,7 +43,7 @@
       <li><a href="#publications" class="nav-item" data-target="publications">Publications</a></li>
       <li><a href="#patents" class="nav-item" data-target="patents">Patents</a></li>
       <li><a href="#competitions" class="nav-item" data-target="competitions">Competitions</a></li>
-      <li><a href="#Awards" class="nav-item" data-target="Awards">Awards</a></li>
+      <li><a href="#awards" class="nav-item" data-target="awards">Awards</a></li>
       <li><a href="#academic-service" class="nav-item" data-target="academic-service">Academic Service</a></li>
       <li><a href="#skills" class="nav-item" data-target="skills">Skills</a></li>
     </ul>
@@ -90,8 +102,8 @@
       </div>
 
       <div class="avatar-card">
-        <div class="avatar">
-          <span class="avatar-initials">Q. Li</span>
+        <div class="avatar" role="img" aria-label="Qiran Li avatar">
+          <span class="avatar-initials" aria-hidden="true">Q. Li</span>
           <!-- <span class="avatar-badge">Research</span> -->
         </div>
       </div>
@@ -306,7 +318,7 @@
           </div>
         </section>
 
-        <section id="Awards">
+        <section id="awards">
           <div class="section-header">
             <div>
               <div class="section-title">Awards</div>
@@ -478,21 +490,21 @@
   </button>
 
   <!-- 移动端汉堡菜单 -->
-  <div class="hamburger" aria-label="Menu">
+  <div class="hamburger" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">
     <span></span>
     <span></span>
     <span></span>
   </div>
 
   <!-- 移动端菜单 -->
-  <nav class="mobile-menu">
+  <nav class="mobile-menu" id="mobile-menu" aria-label="Mobile navigation">
     <ul>
       <li><a href="#top" data-target="top">Qiran Li</a></li>
       <li><a href="#education" data-target="education">Education</a></li>
       <li><a href="#publications" data-target="publications">Publications</a></li>
       <li><a href="#patents" data-target="patents">Patents</a></li>
       <li><a href="#competitions" data-target="competitions">Competitions</a></li>
-      <li><a href="#Awards" data-target="Awards">Awards</a></li>
+      <li><a href="#awards" data-target="awards">Awards</a></li>
       <li><a href="#academic-service" data-target="academic-service">Academic Service</a></li>
       <li><a href="#skills" data-target="skills">Skills</a></li>
     </ul>

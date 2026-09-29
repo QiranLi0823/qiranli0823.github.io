@@ -21,6 +21,15 @@ function throttle(func, limit) {
 
 // 导航栏交互
 document.addEventListener('DOMContentLoaded', function() {
+  // 标记 JS 已启用，让 CSS 中的隐藏态生效
+  document.documentElement.classList.add('js');
+
+  // 如果浏览器不支持 IntersectionObserver，直接展示所有元素，避免白屏
+  if (!('IntersectionObserver' in window)) {
+    document.querySelectorAll('.list-item').forEach(el => el.classList.add('animate-item'));
+    document.querySelectorAll('.animate-on-scroll').forEach(el => el.classList.add('visible'));
+  }
+
   const navItems = document.querySelectorAll('.nav-item');
   const sections = document.querySelectorAll('section, header[id]');
   const sideNav = document.querySelector('.side-nav');
@@ -56,8 +65,15 @@ document.addEventListener('DOMContentLoaded', function() {
       const elementTop = targetElement.offsetTop;
       const elementHeight = targetElement.offsetHeight;
       const windowHeight = window.innerHeight;
-      scrollTop = elementTop + (elementHeight / 2) - (windowHeight / 2);
       const maxScroll = document.documentElement.scrollHeight - windowHeight;
+
+      if (elementHeight >= windowHeight) {
+        // 目标比视口高，直接贴顶显示
+        scrollTop = elementTop;
+      } else {
+        // 否则居中显示
+        scrollTop = elementTop + (elementHeight / 2) - (windowHeight / 2);
+      }
       scrollTop = Math.max(0, Math.min(scrollTop, maxScroll));
     }
 
@@ -150,7 +166,8 @@ document.addEventListener('DOMContentLoaded', function() {
   updateActiveNav();
 
   // 鼠标移动时更新导航栏（仅桌面端）
-  if (sideNav) {
+  const isDesktop = window.matchMedia('(min-width: 769px) and (hover: hover) and (pointer: fine)').matches;
+  if (sideNav && isDesktop) {
     // 获取鼠标所在位置的 section
     function getSectionAtMousePosition(mouseX, mouseY) {
       for (const section of sections) {
@@ -348,19 +365,3 @@ document.addEventListener('DOMContentLoaded', function() {
     yearElement.textContent = new Date().getFullYear();
   }
 });
-
-// 暗色模式检测 - 已禁用
-/*
-if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-  document.documentElement.setAttribute('data-theme', 'dark');
-}
-
-// 监听暗色模式变化
-window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-  if (e.matches) {
-    document.documentElement.setAttribute('data-theme', 'dark');
-  } else {
-    document.documentElement.removeAttribute('data-theme');
-  }
-});
-*/
